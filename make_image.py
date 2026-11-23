@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""news-image-20261122 v3 - built fresh from the rank-1/2/3 reference layout.
+"""news-image-20261122 v4 - v3 layout with 3 fixes: redrawn lead scenes
+(tanker reads as a ship, warship reads as a warship, COP31 clarified),
+more breathing room (line spacing, DATE CHECK/footer air), fanned map pins.
+Built fresh from the rank-1/2/3 reference layout.
 Structure follows the top leaderboard entries (dark top bar, giant serif
 masthead, number strip, region tabs, UTC strip, 3 illustrated leads,
 10 illustrated medium cards, world map + 'also' list, red DATE CHECK box,
@@ -122,135 +125,176 @@ def smoke_big(d, cx, cy, r):
                    cx + ox * r + rr * r, cy + oy * r + rr * r], fill=col)
 
 def draw_cop31(d, x, y, w, h):
-    sky_band(d, (x, y, x + w, y + h), (236, 220, 186), (216, 190, 142))
+    sky_band(d, (x, y, x + w, y + h), (236, 220, 186), (214, 188, 140))
     # back wall + floor
-    d.rectangle([x, y + h * 0.55, x + w, y + h * 0.62], fill=(150, 112, 70))
-    d.rectangle([x, y + h * 0.62, x + w, y + h], fill=(120, 86, 52))
-    # flags row
-    flag_cols = [(0, 90, 160), (200, 30, 40), (0, 130, 80), (240, 200, 40),
-                 (230, 230, 230), (230, 120, 30), (140, 60, 160),
-                 (0, 180, 180), (220, 40, 90), (40, 90, 60)]
-    n = 10
-    fw = (w - 16) / n
-    for i in range(n):
-        fx = x + 8 + i * fw
-        d.line([(fx + fw / 2, y + 6), (fx + fw / 2, y + h * 0.50)], fill=(70, 52, 32), width=2)
-        d.rectangle([fx + 1, y + 6, fx + fw - 3, y + 20], fill=flag_cols[i],
+    d.rectangle([x, y + h * 0.58, x + w, y + h * 0.66], fill=(150, 112, 70))
+    d.rectangle([x, y + h * 0.66, x + w, y + h], fill=(118, 84, 50))
+    # 6 big flags on poles (fewer, wider, clearly readable)
+    flag_cols = [(0, 90, 160), (200, 30, 40), (0, 130, 80),
+                 (240, 200, 40), (230, 120, 30), (140, 60, 160)]
+    fw = (w - 24) / 6
+    for i in range(6):
+        fx = x + 12 + i * fw
+        d.line([(fx + fw / 2, y + 18), (fx + fw / 2, y + h * 0.56)],
+               fill=(70, 52, 32), width=2)
+        d.rectangle([fx + 2, y + 18, fx + fw - 2, y + 38], fill=flag_cols[i],
                     outline=(120, 100, 70))
     # long table with green cloth runner
-    d.rectangle([x + 6, y + h * 0.66, x + w - 6, y + h * 0.88], fill=(96, 64, 38))
-    d.rectangle([x + 6, y + h * 0.66, x + w - 6, y + h * 0.70], fill=(160, 112, 64))
-    d.rectangle([x + w * 0.30, y + h * 0.66, x + w * 0.70, y + h * 0.88],
+    d.rectangle([x + 8, y + h * 0.70, x + w - 8, y + h * 0.94], fill=(96, 64, 38))
+    d.rectangle([x + 8, y + h * 0.70, x + w - 8, y + h * 0.75], fill=(160, 112, 64))
+    d.rectangle([x + w * 0.32, y + h * 0.70, x + w * 0.68, y + h * 0.94],
                 fill=(30, 110, 70))
-    # delegates: head + shoulders + name plate (6, spaced to leave room)
-    suits = [(35, 45, 70), (60, 60, 65), (90, 40, 45),
-             (40, 70, 55), (70, 60, 90), (45, 55, 80)]
-    skins = [(215, 175, 135), (190, 150, 115), (225, 190, 155),
-             (200, 160, 125), (180, 140, 105), (220, 180, 140)]
-    for i in range(6):
-        dx = x + 30 + i * (w - 60) / 5
-        d.rounded_rectangle([dx - 15, y + h * 0.60, dx + 15, y + h * 0.70],
+    # 4 delegates, bigger heads, clear of the podium
+    suits = [(35, 45, 70), (90, 40, 45), (40, 70, 55), (70, 60, 90)]
+    skins = [(215, 175, 135), (190, 150, 115), (225, 190, 155), (200, 160, 125)]
+    for i, dx in enumerate([0.10, 0.28, 0.72, 0.90]):
+        cx = x + w * dx
+        d.rounded_rectangle([cx - 17, y + h * 0.62, cx + 17, y + h * 0.72],
                             radius=6, fill=suits[i])
-        d.ellipse([dx - 8, y + h * 0.47, dx + 8, y + h * 0.47 + 16], fill=skins[i])
-        d.pieslice([dx - 8, y + h * 0.47, dx + 8, y + h * 0.47 + 10], 180, 360,
+        d.ellipse([cx - 9, y + h * 0.48, cx + 9, y + h * 0.48 + 18], fill=skins[i])
+        d.pieslice([cx - 9, y + h * 0.48, cx + 9, y + h * 0.48 + 11], 180, 360,
                    fill=(50, 40, 32))
-        d.rectangle([dx - 11, y + h * 0.72, dx + 11, y + h * 0.72 + 8],
+        d.rectangle([cx - 12, y + h * 0.75, cx + 12, y + h * 0.75 + 8],
                     fill=(245, 242, 230))
-        d.line([(dx - 8, y + h * 0.72 + 4), (dx + 8, y + h * 0.72 + 4)],
-               fill=(120, 110, 90), width=1)
-    # podium front centre with globe
-    d.rectangle([x + w * 0.44, y + h * 0.74, x + w * 0.56, y + h], fill=(70, 48, 30))
-    d.ellipse([x + w * 0.455, y + h * 0.60, x + w * 0.545, y + h * 0.74],
+    # podium front centre with globe + COP31 label
+    d.rectangle([x + w * 0.42, y + h * 0.76, x + w * 0.58, y + h], fill=(70, 48, 30))
+    d.ellipse([x + w * 0.44, y + h * 0.60, x + w * 0.56, y + h * 0.76],
               fill=(55, 130, 95))
-    d.ellipse([x + w * 0.475, y + h * 0.625, x + w * 0.525, y + h * 0.715],
+    d.ellipse([x + w * 0.465, y + h * 0.625, x + w * 0.535, y + h * 0.735],
               fill=(130, 195, 155))
+    t = "COP31"
+    f = F(SSB, 10)
+    d.text((x + w * 0.50 - tw(d, t, f) / 2, y + h * 0.84), t, font=f,
+           fill=(255, 255, 255))
 
 def draw_tankers(d, x, y, w, h):
-    sky_band(d, (x, y, x + w, y + h * 0.55), (14, 22, 50), (70, 55, 95))
-    # stars + moon
-    for sx, sy in [(0.10, 0.12), (0.28, 0.07), (0.52, 0.18), (0.75, 0.08), (0.92, 0.22)]:
+    sky_band(d, (x, y, x + w, y + h * 0.52), (14, 22, 50), (64, 50, 90))
+    # stars + small moon (tops sit under the red label bar, as in v3)
+    for sx, sy in [(0.10, 0.12), (0.28, 0.07), (0.52, 0.16), (0.72, 0.08), (0.95, 0.20)]:
         d.ellipse([x + w * sx - 1, y + h * sy - 1, x + w * sx + 1, y + h * sy + 1],
                   fill=(255, 255, 220))
-    d.ellipse([x + w * 0.84, y + 5, x + w * 0.84 + 17, y + 22], fill=(240, 230, 200))
-    # orange glow on the horizon behind the fire
-    d.ellipse([x + w * 0.16, y + h * 0.28, x + w * 0.44, y + h * 0.62],
-              fill=(200, 90, 40))
+    d.ellipse([x + w * 0.90, y + 4, x + w * 0.90 + 13, y + 17], fill=(240, 230, 200))
     # sea
-    d.rectangle([x, y + h * 0.55, x + w, y + h], fill=(16, 38, 68))
-    for i in range(6):
-        yy = y + h * (0.62 + i * 0.06)
+    sea_y = y + h * 0.52
+    d.rectangle([x, sea_y, x + w, y + h], fill=(16, 38, 68))
+    for i in range(5):
+        yy = sea_y + 8 + i * 9
         for wx in range(0, int(w), 46):
             d.arc([x + wx, yy - 4, x + wx + 22, yy + 4], 180, 360, fill=(90, 140, 180))
-    # tanker 1 (left, burning): hull + deck tanks + superstructure + big flame
-    hx, hy, hw = x + w * 0.05, y + h * 0.50, w * 0.50
-    d.polygon([(hx, hy + 16), (hx + hw, hy + 16), (hx + hw - 10, hy + 34),
-               (hx + 8, hy + 34)], fill=(28, 28, 34))
-    d.rectangle([hx, hy + 16, hx + hw, hy + 20], fill=(60, 60, 70))
+    # ---- tanker 1: big, bow left, burning amidships ----
+    # no big orange glow (that read as an orange hill); the flame is the fire
+    hx, hy, hw = x + w * 0.04, sea_y - 14, w * 0.52
+    # hull: raked stem bow, flat deck, slanted bottom corners, dark outline
+    d.polygon([(hx, hy + 22), (hx + 6, hy + 6), (hx + hw, hy + 6),
+               (hx + hw - 8, hy + 30), (hx + 10, hy + 30)],
+              fill=(28, 28, 34), outline=(8, 8, 10))
+    # white sheer stripe along the deck edge + red waterline stripe
+    d.rectangle([hx + 6, hy + 6, hx + hw, hy + 9], fill=(225, 225, 228))
+    d.rectangle([hx + 8, hy + 26, hx + hw - 8, hy + 29], fill=(150, 30, 30))
+    # 3 cylindrical deck tanks with rounded tops + highlight
     for i in range(3):
-        tx = hx + hw * (0.12 + i * 0.16)
-        d.rectangle([tx, hy - 2, tx + hw * 0.10, hy + 16], fill=(150, 150, 155))
-    d.rectangle([hx + hw * 0.62, hy - 12, hx + hw * 0.80, hy + 16], fill=(130, 45, 40))
-    d.rectangle([hx + hw * 0.65, hy - 20, hx + hw * 0.77, hy - 12], fill=(200, 70, 55))
-    flame(d, hx + hw * 0.32, hy + 16, 16)
-    smoke_big(d, hx + hw * 0.32, hy - 30, 10)
-    # tanker 2 (right): clearly visible, own flame + smoke
-    hx2, hy2, hw2 = x + w * 0.60, y + h * 0.56, w * 0.34
-    d.polygon([(hx2, hy2 + 12), (hx2 + hw2, hy2 + 12), (hx2 + hw2 - 8, hy2 + 28),
-               (hx2 + 6, hy2 + 28)], fill=(42, 42, 50))
-    d.rectangle([hx2, hy2 + 12, hx2 + hw2, hy2 + 15], fill=(80, 80, 90))
-    d.rectangle([hx2 + hw2 * 0.60, hy2 - 6, hx2 + hw2 * 0.78, hy2 + 12],
-                fill=(150, 150, 150))
-    flame(d, hx2 + hw2 * 0.30, hy2 + 12, 11)
-    smoke_big(d, hx2 + hw2 * 0.30, hy2 - 16, 7)
+        tx = hx + hw * (0.10 + i * 0.15)
+        tw_ = hw * 0.11
+        d.rectangle([tx, hy - 8, tx + tw_, hy + 6], fill=(165, 165, 170))
+        d.ellipse([tx, hy - 12, tx + tw_, hy - 4], fill=(190, 190, 195))
+        d.rectangle([tx + 2, hy - 8, tx + 4, hy + 6], fill=(210, 210, 215))
+    # white superstructure at the stern with two window rows
+    sx0 = hx + hw * 0.78
+    d.rectangle([sx0, hy - 22, sx0 + hw * 0.16, hy + 6], fill=(235, 235, 230))
+    for r in range(2):
+        for c in range(3):
+            d.rectangle([sx0 + 4 + c * 9, hy - 18 + r * 8,
+                         sx0 + 4 + c * 9 + 5, hy - 18 + r * 8 + 4],
+                        fill=(30, 60, 90))
+    # funnel with black top + thin smoke (smoke kept below the label bar)
+    d.rectangle([sx0 + hw * 0.17, hy - 18, sx0 + hw * 0.17 + 9, hy + 6],
+                fill=(180, 50, 40))
+    d.rectangle([sx0 + hw * 0.17, hy - 18, sx0 + hw * 0.17 + 9, hy - 14],
+                fill=(25, 25, 28))
+    smoke(d, sx0 + hw * 0.17 + 5, hy - 16, 5)
+    # modest flame ON the deck amidships + thin smoke + orange reflection
+    flame(d, hx + hw * 0.60, hy + 6, 13)
+    smoke_big(d, hx + hw * 0.60, hy - 2, 7)
+    for rx in (0.56, 0.60, 0.64):
+        d.line([(hx + hw * rx, sea_y + 34), (hx + hw * (rx + 0.04), sea_y + 34)],
+               fill=(230, 130, 50), width=2)
+    # ---- tanker 2: smaller, bow right ----
+    hx2, hy2, hw2 = x + w * 0.62, sea_y - 10, w * 0.32
+    d.polygon([(hx2 + hw2, hy2 + 18), (hx2 + hw2 - 6, hy2 + 5), (hx2, hy2 + 5),
+               (hx2 + 8, hy2 + 26), (hx2 + hw2 - 10, hy2 + 26)],
+              fill=(42, 42, 50), outline=(10, 10, 12))
+    d.rectangle([hx2, hy2 + 5, hx2 + hw2 - 6, hy2 + 8], fill=(225, 225, 228))
+    d.rectangle([hx2 + 8, hy2 + 22, hx2 + hw2 - 8, hy2 + 25], fill=(150, 30, 30))
+    for i in range(2):
+        tx = hx2 + hw2 * (0.28 + i * 0.18)
+        tw_ = hw2 * 0.13
+        d.rectangle([tx, hy2 - 6, tx + tw_, hy2 + 5], fill=(165, 165, 170))
+        d.ellipse([tx, hy2 - 10, tx + tw_, hy2 - 3], fill=(190, 190, 195))
+    sx0 = hx2
+    d.rectangle([sx0, hy2 - 16, sx0 + hw2 * 0.14, hy2 + 5], fill=(235, 235, 230))
+    for r in range(2):
+        d.rectangle([sx0 + 3, hy2 - 13 + r * 6, sx0 + 3 + 8, hy2 - 13 + r * 6 + 3],
+                    fill=(30, 60, 90))
+    flame(d, hx2 + hw2 * 0.62, hy2 + 5, 10)
+    smoke_big(d, hx2 + hw2 * 0.62, hy2 - 2, 6)
 
 def draw_merkury(d, x, y, w, h):
     sky_band(d, (x, y, x + w, y + h * 0.5), (250, 195, 125), (225, 145, 90))
-    d.ellipse([x + w * 0.74, y + 4, x + w * 0.74 + 18, y + 22], fill=(255, 240, 200))
-    # distant port cranes
-    d.line([(x + w * 0.07, y + h * 0.5), (x + w * 0.07, y + h * 0.16)],
-           fill=(90, 70, 60), width=3)
-    d.line([(x + w * 0.07, y + h * 0.16), (x + w * 0.20, y + h * 0.30)],
-           fill=(90, 70, 60), width=3)
-    d.line([(x + w * 0.20, y + h * 0.30), (x + w * 0.20, y + h * 0.5)],
-           fill=(90, 70, 60), width=2)
-    # sea
-    d.rectangle([x, y + h * 0.5, x + w, y + h], fill=(38, 68, 92))
+    d.ellipse([x + w * 0.86, y + 20, x + w * 0.86 + 16, y + 36], fill=(255, 240, 200))
+    # sea with whitecaps
+    sea_y = y + h * 0.5
+    d.rectangle([x, sea_y, x + w, y + h], fill=(38, 68, 92))
     for i in range(4):
-        yy = y + h * (0.60 + i * 0.09)
+        yy = sea_y + 10 + i * 10
         for wx in range(0, int(w), 52):
             d.arc([x + wx, yy - 4, x + wx + 24, yy + 4], 180, 360, fill=(115, 155, 185))
-    # warship listing to starboard: bow low left, stern high right, burning
-    hx, hy = x + w * 0.08, y + h * 0.50
-    hw, hh = w * 0.74, h * 0.30
-    d.polygon([(hx, hy + hh * 0.30), (hx + hw * 0.30, hy), (hx + hw, hy + hh * 0.42),
-               (hx + hw - 12, hy + hh * 0.72), (hx + 16, hy + hh * 0.80)],
-              fill=(72, 80, 90))
-    d.rectangle([hx + hw * 0.05, hy + hh * 0.28, hx + hw * 0.95, hy + hh * 0.38],
-                fill=(100, 108, 118))
-    # bridge tower (anjungan) with windows
-    d.rectangle([hx + hw * 0.44, hy - hh * 0.42, hx + hw * 0.60, hy + hh * 0.05],
-                fill=(95, 102, 112))
+    # warship listing to starboard: bow low left dipping into the sea,
+    # stern high right, burning at the stern
+    hx, hy = x + w * 0.06, y + h * 0.52
+    hw = w * 0.80
+    bow_x, bow_y = hx, hy + 6
+    stern_x, stern_y = hx + hw, hy - 14
+    # hull: pointed bow, deck sloping up to the raised stern, dark outline
+    d.polygon([(bow_x, bow_y), (stern_x, stern_y),
+               (stern_x - 10, stern_y + 22), (bow_x + 18, bow_y + 20)],
+              fill=(88, 98, 110), outline=(40, 46, 56))
+    # pale deck-edge stripe following the slope + white waterline stripe
+    d.line([(bow_x + 2, bow_y - 1), (stern_x - 2, stern_y - 1)],
+           fill=(215, 220, 228), width=2)
+    d.line([(bow_x + 10, bow_y + 15), (stern_x - 12, stern_y + 16)],
+           fill=(235, 235, 240), width=2)
+    # portholes along the hull (breaks the flat-slab look)
+    for i in range(6):
+        t = 0.12 + i * 0.14
+        px = bow_x + t * hw
+        py = bow_y + (stern_y - bow_y) * t + 10
+        d.ellipse([px - 2, py - 2, px + 2, py + 2], fill=(30, 38, 48))
+    # bridge tower with windows (midship)
+    bx = hx + hw * 0.46
+    d.rectangle([bx, hy - 30, bx + 34, hy + 2], fill=(98, 106, 118))
     for i in range(3):
-        d.rectangle([hx + hw * (0.46 + i * 0.045), hy - hh * 0.36,
-                     hx + hw * (0.46 + i * 0.045) + 6, hy - hh * 0.22],
+        d.rectangle([bx + 5 + i * 10, hy - 26, bx + 5 + i * 10 + 6, hy - 16],
                     fill=(200, 220, 235))
-    # funnel + smoke
-    d.rectangle([hx + hw * 0.66, hy - hh * 0.30, hx + hw * 0.72, hy + hh * 0.05],
-                fill=(70, 74, 82))
-    smoke_big(d, hx + hw * 0.69, hy - hh * 0.55, 8)
-    # mast
-    d.line([(hx + hw * 0.52, hy - hh * 0.42), (hx + hw * 0.52, hy - hh * 0.85)],
-           fill=(60, 66, 76), width=2)
-    d.line([(hx + hw * 0.46, hy - hh * 0.70), (hx + hw * 0.58, hy - hh * 0.70)],
-           fill=(60, 66, 76), width=2)
-    # gun turret + long barrel at the bow
-    d.ellipse([hx + hw * 0.14, hy - hh * 0.10, hx + hw * 0.28, hy + hh * 0.14],
-              fill=(58, 64, 74))
-    d.line([(hx + hw * 0.26, hy), (hx + hw * 0.44, hy - hh * 0.30)],
-           fill=(58, 64, 74), width=4)
-    # fire + big smoke at the stern
-    flame(d, hx + hw * 0.88, hy + hh * 0.30, 12)
-    smoke_big(d, hx + hw * 0.88, hy - hh * 0.10, 9)
+    # mast with crossbar (kept below the red label bar)
+    mx = bx + 17
+    d.line([(mx, hy - 30), (mx, hy - 42)], fill=(60, 66, 76), width=2)
+    d.line([(mx - 9, hy - 38), (mx + 9, hy - 38)], fill=(60, 66, 76), width=2)
+    # funnel with smoke
+    fx = hx + hw * 0.66
+    d.rectangle([fx, hy - 22, fx + 12, hy + 2], fill=(70, 74, 82))
+    smoke(d, fx + 6, hy - 26, 5)
+    # gun turret forward with a long barrel angled up-forward
+    gx = hx + hw * 0.16
+    d.ellipse([gx - 10, hy - 8, gx + 12, hy + 8], fill=(58, 64, 74))
+    d.line([(gx + 8, hy - 2), (gx + 34, hy - 24)], fill=(58, 64, 74), width=4)
+    # fire + smoke at the raised stern (smoke kept below the label bar)
+    flame(d, stern_x - 8, stern_y + 2, 11)
+    smoke_big(d, stern_x - 8, stern_y - 2, 7)
+    # foam + spray where the bow dips under
+    for wx in range(0, 40, 12):
+        d.arc([bow_x - 14 + wx, bow_y + 8, bow_x + 6 + wx, bow_y + 16], 180, 360,
+              fill=(235, 242, 248))
+    d.ellipse([bow_x - 6, bow_y + 2, bow_x + 10, bow_y + 10], fill=(225, 235, 242))
     # sea drone bottom right
     d.ellipse([x + w * 0.85, y + h * 0.80, x + w * 0.85 + 22, y + h * 0.80 + 8],
               fill=(30, 30, 36))
@@ -639,10 +683,10 @@ def draw_map(d, box):
 # pins: (story_no, lon, lat, dx, dy) - nudged so the Europe / Middle East
 # cluster separates into readable pins (base positions are only ~1 deg apart)
 PINS = [
-    (1, 30.7, 36.9, 11, -8), (2, 56.5, 26.5, 8, -2), (3, 20.1, 32.1, -12, 9),
-    (4, -77.0, 38.9, 0, 0), (5, 30.3, 50.8, 0, -12), (6, 32.5, 15.6, -11, 8),
-    (7, 39.0, 22.8, 3, 13), (8, 51.4, 35.7, 10, -9), (9, 106.2, -6.1, 0, 0),
-    (10, 7.7, 45.1, 2, -11), (11, -115.1, 36.2, 0, 0), (12, 30.5, 50.5, 12, -10),
+    (1, 30.7, 36.9, 16, -17), (2, 56.5, 26.5, 14, 0), (3, 20.1, 32.1, -13, 9),
+    (4, -77.0, 38.9, 0, 0), (5, 30.3, 50.8, -9, -19), (6, 32.5, 15.6, -4, 12),
+    (7, 39.0, 22.8, 12, 12), (8, 51.4, 35.7, 15, -9), (9, 106.2, -6.1, 0, 0),
+    (10, 7.7, 45.1, -6, -14), (11, -115.1, 36.2, 0, 0), (12, 30.5, 50.5, 6, -20),
     (13, 114.2, 22.3, 0, 0),
 ]
 
@@ -749,17 +793,17 @@ ALSO = [
     (22, "ASIA", "Thai court upholds royal defamation verdict", "AP"),
     (23, "MIDDLE EAST", "Iran starts power rationing for winter", "BBC Persian"),
     (24, "ASIA", "China chip makers gain; Nvidia pressed", "Reuters"),
-    (25, "ASIA", "Lowy Index: US-China power gap narrows", "Standard"),
+    (25, "ASIA", "Lowy: US-China power gap narrows", "Standard"),
     (26, "ASIA", "India Youth Congress protests at Meta", "Standard"),
     (27, "ASIA", "Delhi forum ends, no India-Pakistan talks", "Standard"),
     (28, "AMERICAS", "Haiti, El Salvador agree to build 3 prisons", "Guardian"),
-    (29, "AMERICAS", "Skubal agrees $450m Mets deal, a record", "Guardian"),
+    (29, "AMERICAS", "Skubal agrees $450m Mets deal", "Guardian"),
     (30, "AMERICAS", "KC Current win first NWSL title 2-1", "Al Jazeera"),
     (31, "AMERICAS", "Boca win Copa Sudamericana 2-0", "BA Times"),
-    (32, "EUROPE", "Marquez seals 8th MotoGP title in Portugal", "Guardian"),
+    (32, "EUROPE", "Marquez seals 8th MotoGP title", "Guardian"),
     (33, "EUROPE", "England hosts 2035 Women's World Cup", "BBC Sport"),
-    (34, "AFRICA", "Ammo depot blast at Benghazi base", "Daily Summary"),
-    (35, "WORLD", "World chess title match begins in Geneva", "Al Jazeera"),
+    (34, "AFRICA", "Ammo depot blast at Benghazi", "Daily Summary"),
+    (35, "WORLD", "Chess title match begins in Geneva", "Al Jazeera"),
 ]
 
 NUMBERS = [
@@ -873,15 +917,15 @@ def build():
         yy += 16
         # headline
         hl = fit_lines(d, head, F(SB, 19), LW, 2)
-        yy = draw_text_block(d, lx, yy, hl, F(SB, 19), INK, 21)
+        yy = draw_text_block(d, lx, yy, hl, F(SB, 19), INK, 22)
         # body
         bl = fit_lines(d, body, F(SS, 10.5), LW, 3)
-        yy = draw_text_block(d, lx, yy + 2, bl, F(SS, 10.5), INK, 13)
+        yy = draw_text_block(d, lx, yy + 2, bl, F(SS, 10.5), INK, 14)
         # attribution
         d.text((lx, yy + 3), f"({src})", font=F(SI, 9), fill=GREY)
 
     # 7. medium grid 5 x 2
-    y = 480
+    y = 472
     MW = (CW - 4 * 6) / 5
     MH = 140
     for row in range(2):
@@ -897,9 +941,9 @@ def build():
             d.text((mx, yy), f"{num}  {place}", font=F(SSB, 8.5), fill=RED)
             yy += 13
             hl = fit_lines(d, head, F(SB, 12.5), MW, 2)
-            yy = draw_text_block(d, mx, yy, hl, F(SB, 12.5), INK, 15)
+            yy = draw_text_block(d, mx, yy, hl, F(SB, 12.5), INK, 16)
             bl = fit_lines(d, body, F(SS, 9), MW, 2)
-            yy = draw_text_block(d, mx, yy + 1, bl, F(SS, 9), INK, 11)
+            yy = draw_text_block(d, mx, yy + 1, bl, F(SS, 9), INK, 12)
             d.text((mx, yy + 2), f"({src})", font=F(SI, 8), fill=GREY)
 
     # 8. map + also list (20px side margins for the whole bottom band)
@@ -909,7 +953,7 @@ def build():
     d.text((BMX, y), "WHERE IT HAPPENED", font=F(SSB, 11), fill=INK)
     rt = "pins match story numbers"
     d.text((BMX + map_w - tw(d, rt, F(SI, 9)), y + 1), rt, font=F(SI, 9), fill=GREY)
-    map_box = (BMX, y + 16, BMX + map_w, y + 16 + 118)
+    map_box = (BMX, y + 16, BMX + map_w, y + 16 + 124)
     draw_map(d, map_box)
     draw_pins(d, map_box)
 
@@ -927,7 +971,7 @@ def build():
         col = i // 11
         r = i % 11
         xx = ax + col * (col_w + 12)
-        yy = y + 16 + r * 12
+        yy = y + 16 + r * 13
         d.text((xx, yy), str(num), font=nf, fill=RED)
         d.text((xx + 18, yy), region, font=rf, fill=RED)
         rest = f"{title} — {src}"
@@ -935,8 +979,8 @@ def build():
         d.text((xx + 18 + region_slot + 6, yy), rl[0], font=lf, fill=INK)
 
     # 9. DATE CHECK (roomy: 11pt, 2 lines, bold red lead-in, 6 exclusions)
-    y = 923
-    d.rectangle([BMX, y, W - BMX, y + 48], outline=RED, width=2)
+    y = 930
+    d.rectangle([BMX, y, W - BMX, y + 42], outline=RED, width=2)
     prefix = "DATE CHECK — "
     pf = F(SSB, 11)
     bf = F(SS, 11)
@@ -954,7 +998,7 @@ def build():
         d.text((tx, y + 10 + i * 14), ln, font=bf, fill=INK)
 
     # 10. footer (20px side margins, slightly larger type)
-    y = 977
+    y = 980
     d.text((BMX, y), "Sources: Reuters, BBC, AP, Al Jazeera, The Guardian, UN News, CNN, "
                     "France 24, Daily Summary, SCMP, Straits Times, Tasnim. Scenes are drawn "
                     "illustrations of reported events, not photographs.",
